@@ -1,0 +1,33 @@
+{
+  "source_zip": "Printify_Main(final)(5).zip",
+  "extracted_source_files": 97,
+  "compatibility_files_added": [
+    "Frontend/css/forgot-password.css",
+    "Frontend/image/darkmode_icon.png"
+  ],
+  "total_bundled_frontend_files": 99,
+  "javascript_files_syntax_checked": 25,
+  "html_pages_checked": 19,
+  "missing_html_references": [],
+  "protected_files_preserved_during_apply": [
+    "Frontend/login.html",
+    "Frontend/js/login.js",
+    "Frontend/css/style.css"
+  ],
+  "backend_modified": false,
+  "deployment_tested": false,
+  "breadcrumbs_pages": [
+    "dashboard.html",
+    "inventory.html",
+    "orders.html",
+    "reports.html",
+    "staff-attendance.html",
+    "staff-dashboard.html",
+    "staff-management.html",
+    "staff-notifications.html",
+    "staff-orders.html",
+    "staff-profile.html",
+    "staff-settings.html",
+    "staff-tracking.html"
+  ]
+}

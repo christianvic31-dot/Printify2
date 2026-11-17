@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/auth-guard.js" data-role="Staff"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | Printify</title>
+    <link rel="icon" type="image/png" href="image/printify_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="css/staff-dashboard.css">
+    <link rel="stylesheet" href="css/staff-pages.css">
+    <link rel="stylesheet" href="css/staff-notifications.css">
+    <script src="js/staff-common.js" defer></script>
+    <script src="js/staff-notifications.js" defer></script>
+</head>
+<body class="light-mode">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="staff-dashboard.html" class="logo">
+                <div class="logo-icon"><img src="image/printify_logo.png" alt="Printify logo"></div>
+                <span>Printify</span>
+            </a>
+        </div>
+        <div class="sidebar-label">WORKSPACE</div>
+        <nav class="sidebar-navigation">
+            <a href="staff-dashboard.html" class="nav-link"><img src="image/dashboard_icon.png" class="menu-icon" alt=""><span>Dashboard</span></a>
+            <a href="staff-orders.html" class="nav-link"><img src="image/order_icon.png" class="menu-icon" alt=""><span>My Orders</span></a>
+            <a href="staff-attendance.html" class="nav-link"><img src="image/attendance_icon.png" class="menu-icon" alt=""><span>Attendance</span></a>
+            <a href="staff-notifications.html" class="nav-link active" aria-current="page"><img src="image/notification_icon.png" class="menu-icon" alt=""><span>Notifications</span></a>
+        </nav>
+        <div class="sidebar-label settings-label">PERSONAL</div>
+        <nav class="sidebar-navigation">
+            <a href="staff-profile.html" class="nav-link"><img src="image/user_icon.png" class="menu-icon" alt=""><span>My Profile</span></a>
+            <a href="staff-settings.html" class="nav-link"><img src="image/settings_ion.png" class="menu-icon" alt=""><span>Settings</span></a>
+        </nav>
+        <div class="sidebar-bottom">
+            <div class="sidebar-account">
+                <div class="account-avatar" data-staff-initials id="sidebarAvatar">S</div>
+                <div class="account-details"><strong data-staff-name id="sidebarName">Staff Member</strong><span>Staff Account</span></div>
+                <span class="online-indicator"></span>
+            </div>
+            <button class="sidebar-logout" id="sidebarLogoutButton" type="button"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+            <div class="sidebar-footer"><span>PRINTIFY CALAPAN</span><span>© <span data-current-year id="sidebarYear"></span></span></div>
+        </div>
+    </aside>
+    <main class="main-content" id="mainContent">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="icon-button menu-button" id="menuToggle" type="button" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
+                <div class="page-heading"><h1>Notifications</h1><p>Updates about orders assigned to you.</p></div>
+            </div>
+            <div class="topbar-right">
+                <div class="current-date" id="currentDate"><i class="fa-regular fa-calendar"></i><span>Loading date...</span></div>
+                <button class="icon-button theme-toggle" id="themeToggle" type="button" aria-label="Switch theme" title="Switch theme">
+                    <img src="image/lightmode_icon.png" id="themeIcon" class="theme-image-icon" alt="Theme">
+                </button>
+                <button class="icon-button notification-button" id="notificationButton" type="button" aria-label="Notifications"><i class="fa-regular fa-bell"></i><span class="notification-dot"></span></button>
+                <div class="profile-container">
+                    <button class="profile-button" id="profileButton" type="button" aria-expanded="false" aria-label="Staff account menu">
+                        <div class="profile-avatar" id="profileAvatar" data-staff-initials>S</div>
+                        <div class="profile-information"><strong id="profileName" data-staff-name>Staff Member</strong><span>Staff Account</span></div>
+                        <i class="fa-solid fa-chevron-down profile-arrow"></i>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="dropdown-profile"><div class="profile-avatar" id="dropdownAvatar" data-staff-initials>S</div><div><strong id="dropdownName" data-staff-name>Staff Member</strong><span>Staff Account</span></div></div>
+                        <a href="staff-profile.html"><i class="fa-regular fa-user"></i> My Profile</a>
+                        <a href="staff-settings.html"><i class="fa-solid fa-gear"></i> Account Settings</a>
+                        <button id="logoutButton" type="button"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <section class="dashboard-content staff-page-content notifications-content orders-matched-layout">
+            <nav class="notifications-breadcrumb staff-orders-breadcrumb" aria-label="Breadcrumb">
+                <a href="staff-dashboard.html">Staff Workspace</a>
+                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                <span aria-current="page">Notifications</span>
+            </nav>
+            <div class="content-introduction notifications-introduction">
+                <div>
+                    <h2>Your Updates</h2>
+                    <p id="notificationSummary">Loading notifications...</p>
+                </div>
+                <button class="notifications-refresh" id="refreshNotificationsButton" type="button">
+                    <i class="fa-solid fa-rotate" aria-hidden="true"></i> Refresh Notifications
+                </button>
+            </div>
+            <section class="panel staff-page-panel notifications-panel">
+                <div class="notifications-panel-header">
+                    <div><h2>Notification Center</h2><p>Stay updated on your assigned printing orders.</p></div>
+                    <span class="notifications-live"><span class="notifications-dot"></span> Live Updates</span>
+                </div>
+                <p class="staff-page-message" id="notificationMessage" role="status" aria-live="polite"></p>
+                <div class="staff-notification-list" id="notificationList">
+                    <p class="staff-page-empty">Loading notifications...</p>
+                </div>
+            </section>
+            <footer class="dashboard-footer"><span>© <span data-current-year></span> <strong>Printify Calapan</strong> • Staff Workspace</span></footer>
+        </section>
+    </main>
+</body>
+</html>

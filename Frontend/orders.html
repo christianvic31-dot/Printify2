@@ -1,0 +1,1028 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="js/auth-guard.js" data-role="Admin"></script>
+
+    <title>Printify | Orders</title>
+
+    <link rel="icon" type="image/png" href="image/printify_logo.png">
+
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/orders.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/printify-alert.js" defer></script>
+    <script src="js/orders.js" defer></script>
+
+    <style>
+        /* MATCH DASHBOARD SIDEBAR */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            padding: 25px 17px;
+            transition:
+                transform .35s ease,
+                opacity .3s ease,
+                visibility .3s ease,
+                background .3s ease;
+        }
+
+        .sidebar.is-hidden {
+            transform: translateX(-120%);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 25px;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logout-button {
+            width: 100%;
+            min-height: 47px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            color: #ff9292;
+            background: rgba(255,75,75,.08);
+            border: 1px solid rgba(255,100,100,.16);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: left;
+            transition: all .25s ease;
+        }
+
+        .sidebar-logout-button i {
+            width: 20px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .sidebar-logout-button:hover {
+            color: #ffffff;
+            background: rgba(255,75,75,.18);
+            border-color: rgba(255,100,100,.40);
+            transform: translateX(3px);
+        }
+
+        .sidebar-overlay {
+            transition: opacity .3s ease, visibility .3s ease;
+        }
+
+        .main-content {
+            transition: margin-left .35s ease, width .35s ease;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .sidebar,
+            .main-content,
+            .sidebar-overlay,
+            .sidebar-logout-button {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="sidebar-hidden">
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-header">
+            <a href="dashboard.html" class="logo">
+                <div class="logo-icon">
+                    <img src="image/printify_logo.png" alt="Printify Logo">
+                </div>
+                <span>Printify</span>
+            </a>
+        </div>
+
+        <div class="sidebar-label">MAIN MENU</div>
+
+        <nav class="sidebar-navigation">
+
+            <a href="dashboard.html" class="nav-link">
+                <img src="image/dashboard_icon.png"
+                     class="menu-icon" alt="">
+                <span>Dashboard</span>
+            </a>
+
+            <a href="orders.html" class="nav-link active">
+                <img src="image/order_icon.png"
+                     class="menu-icon" alt="">
+                <span>Orders</span>
+            </a>
+
+            <a href="inventory.html" class="nav-link">
+                <img src="image/inventory_icon.png"
+                     class="menu-icon" alt="">
+                <span>Inventory</span>
+            </a>
+
+            <a href="staff-management.html" class="nav-link">
+                <img src="image/staff_icon.png"
+                     class="menu-icon" alt="">
+                <span>Staff Management</span>
+            </a>
+
+            <a href="staff-tracking.html" class="nav-link">
+                <img src="image/stafftracking_icon.png"
+                     class="menu-icon" alt="">
+                <span>Staff Tracking</span>
+            </a>
+
+            <a href="reports.html" class="nav-link">
+                <img src="image/reports_icon.png"
+                     class="menu-icon" alt="">
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-label settings-label">
+            PREFERENCES
+        </div>
+
+        <nav class="sidebar-navigation">
+            <a href="settings.html" class="nav-link">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <!-- DASHBOARD LOGOUT -->
+        <div class="sidebar-footer">
+            <button type="button"
+                    class="sidebar-logout-button"
+                    id="sidebarLogoutButton">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Log Out</span>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" id="mainContent">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button type="button"
+                        class="icon-button menu-button"
+                        id="menuToggle"
+                        aria-label="Toggle sidebar"
+                        aria-controls="sidebar"
+                        aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div class="page-heading">
+                    <h1>Orders</h1>
+                    <p>Manage your printing shop's customer orders.</p>
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="current-date" id="currentDate">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Loading date...</span>
+                </div>
+
+                <button type="button"
+                        class="icon-button theme-toggle"
+                        id="themeToggle"
+                        aria-label="Switch theme">
+                    <img src="image/lightmode_icon.png"
+                         id="themeIcon"
+                         alt="Theme"
+                         class="theme-image-icon">
+                </button>
+
+                <button type="button"
+                        class="icon-button notification-button"
+                        id="notificationButton"
+                        aria-label="Notifications">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notification-dot"></span>
+                </button>
+
+                <div class="profile-container">
+
+                    <button type="button"
+                            class="profile-button"
+                            id="profileButton"
+                            aria-expanded="false">
+
+                        <div class="profile-avatar">AD</div>
+
+                        <div class="profile-information">
+                            <strong>Administrator</strong>
+                            <span>Admin Account</span>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-down profile-arrow"></i>
+                    </button>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+
+                        <div class="dropdown-profile">
+                            <div class="profile-avatar">AD</div>
+                            <div>
+                                <strong>Administrator</strong>
+                                <span>Admin Account</span>
+                            </div>
+                        </div>
+
+                        <a href="settings.html">
+                            <i class="fa-solid fa-gear"></i>
+                            <span>Settings</span>
+                        </a>
+
+                        <button type="button"
+                                id="logoutButton"
+                                class="logout-button">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Log Out</span>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ORDERS CONTENT -->
+        <section class="dashboard-content orders-content">
+
+            <nav class="breadcrumb"
+                 aria-label="Breadcrumb"
+                 style="margin:0 0 24px 0;">
+
+                <a href="dashboard.html">
+                    <span>Dashboard</span>
+                </a>
+
+                <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+
+                <span class="breadcrumb-current"
+                      aria-current="page">
+                    Orders
+                </span>
+            </nav>
+
+            <!-- ACTIVE ORDERS -->
+            <section class="panel orders-panel"
+                     id="activeOrdersPanel">
+
+                <div class="orders-panel-header">
+
+                    <div>
+                        <h2>Customer Orders</h2>
+                        <p>Check order details, payment, and progress.</p>
+                    </div>
+
+                    <div class="orders-header-actions">
+
+                        <span class="order-record-count"
+                              id="recordCount">
+                            0 records
+                        </span>
+
+                        <button type="button"
+                                id="showArchivedOrdersButton"
+                                class="secondary-button">
+                            <i class="fa-solid fa-box-archive"></i>
+                            Archived Orders
+                        </button>
+
+                        <button type="button"
+                                id="addOrderButton"
+                                class="primary-button">
+                            <i class="fa-solid fa-plus"></i>
+                            Create Order
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- SEARCH AND FILTERS -->
+                <div class="orders-toolbar">
+
+                    <div class="search-container">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input type="search"
+                               id="searchOrders"
+                               placeholder="Search order ID, customer, or service..."
+                               aria-label="Search orders">
+
+                        <button type="button"
+                                id="clearSearch"
+                                class="clear-search-button"
+                                aria-label="Clear search">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+
+                    </div>
+
+                    <div class="filter-container">
+
+                        <label for="statusFilter">Status</label>
+
+                        <select id="statusFilter">
+                            <option value="All">All Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+
+                    </div>
+
+                    <div class="filter-container">
+
+                        <label for="paymentFilter">Payment</label>
+
+                        <select id="paymentFilter">
+                            <option value="All">All Payments</option>
+                            <option value="Unpaid">Unpaid</option>
+                            <option value="Partially Paid">Partially Paid</option>
+                            <option value="Paid">Paid</option>
+                        </select>
+
+                    </div>
+
+                    <button type="button"
+                            id="resetFilters"
+                            class="secondary-button">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Reset
+                    </button>
+
+                </div>
+
+                <!-- ORDERS TABLE -->
+                <div class="table-wrapper orders-table-wrapper">
+
+                    <table class="staff-table orders-table">
+
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Printing Service</th>
+                                <th>Assigned To</th>
+                                <th>Order Date</th>
+                                <th>Due Date</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="ordersTableBody"></tbody>
+
+                    </table>
+                </div>
+
+                <!-- EMPTY STATE -->
+                <div class="empty-state"
+                     id="emptyState"
+                     hidden>
+
+                    <div class="empty-state-icon">
+                        <img src="image/order_icon2.png" alt="">
+                    </div>
+
+                    <h3>No orders found</h3>
+                    <p>Try changing your search or create a new customer order.</p>
+
+                    <button type="button"
+                            class="primary-button"
+                            id="emptyCreateButton">
+                        <i class="fa-solid fa-plus"></i>
+                        Create First Order
+                    </button>
+                </div>
+
+                <!-- TABLE FOOTER -->
+                <div class="orders-table-footer">
+
+                    <span id="tableInformation">
+                        Showing 0 orders
+                    </span>
+
+                    <div class="export-buttons">
+
+                        <button type="button"
+                                id="exportOrdersButton"
+                                class="secondary-button">
+                            <i class="fa-solid fa-file-csv"></i>
+                            Export CSV
+                        </button>
+
+                        <button type="button"
+                                id="exportExcelButton"
+                                class="secondary-button">
+                            <i class="fa-solid fa-file-excel"></i>
+                            Export Excel
+                        </button>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- ARCHIVED ORDERS -->
+            <section class="panel orders-panel archived-orders-panel"
+                     id="archivedOrdersPanel"
+                     hidden>
+
+                <div class="orders-panel-header">
+
+                    <div>
+                        <h2>
+                            <i class="fa-solid fa-box-archive"></i>
+                            Archived Orders
+                        </h2>
+                        <p>View, restore, or permanently delete archived customer orders.</p>
+                    </div>
+
+                    <div class="orders-header-actions">
+
+                        <span class="order-record-count"
+                              id="archivedRecordCount">
+                            0 records
+                        </span>
+
+                        <button type="button"
+                                id="backToActiveOrdersButton"
+                                class="secondary-button">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Back to Orders
+                        </button>
+                    </div>
+                </div>
+
+                <div class="orders-toolbar">
+
+                    <div class="search-container">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input type="search"
+                               id="searchArchivedOrders"
+                               placeholder="Search archived orders...">
+                    </div>
+                </div>
+
+                <div class="table-wrapper orders-table-wrapper">
+
+                    <table class="staff-table orders-table">
+
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Printing Service</th>
+                                <th>Assigned To</th>
+                                <th>Order Date</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Archived Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="archivedOrdersTableBody"></tbody>
+
+                    </table>
+                </div>
+
+                <div class="empty-state"
+                     id="archivedEmptyState"
+                     hidden>
+
+                    <div class="empty-state-icon">
+                        <i class="fa-solid fa-box-open"></i>
+                    </div>
+
+                    <h3>No archived orders</h3>
+                    <p>Orders that you archive will appear here.</p>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="dashboard-footer">
+                <p>
+                    © <span id="currentYear"></span> Printify.
+                    Printing Shop Tracking and Inventory System.
+                </p>
+                <span>Manage smarter. Print better.</span>
+            </footer>
+
+        </section>
+    </main>
+
+    <!-- CREATE / EDIT ORDER MODAL -->
+    <div class="modal-overlay"
+         id="orderModal"
+         aria-hidden="true">
+
+        <section class="order-modal"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="modalTitle">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2 id="modalTitle">Create New Order</h2>
+                    <p>Enter the customer's order information.</p>
+                </div>
+
+                <button type="button"
+                        class="modal-close-button"
+                        id="closeOrderModal"
+                        aria-label="Close modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="orderForm">
+
+                <input type="hidden" id="editOrderId">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="customerName">
+                            Customer Name <span>*</span>
+                        </label>
+                        <input type="text"
+                               id="customerName"
+                               placeholder="Enter customer name"
+                               maxlength="100"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customerContact">
+                            Contact Number
+                        </label>
+                        <input type="tel"
+                               id="customerContact"
+                               placeholder="e.g. 09123456789"
+                               maxlength="20">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="printingService">
+                            Printing Service <span>*</span>
+                        </label>
+
+                        <select id="printingService" required>
+                            <option value="">Select service</option>
+                            <option value="Document Printing">Document Printing</option>
+                            <option value="Photocopy">Photocopy</option>
+                            <option value="Photo Printing">Photo Printing</option>
+                            <option value="Tarpaulin Printing">Tarpaulin Printing</option>
+                            <option value="Binding">Binding</option>
+                            <option value="Lamination">Lamination</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">
+                            Quantity <span>*</span>
+                        </label>
+                        <input type="number"
+                               id="quantity"
+                               min="1"
+                               max="100000"
+                               value="1"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="unitPrice">
+                            Price per Unit (₱) <span>*</span>
+                        </label>
+                        <input type="number"
+                               id="unitPrice"
+                               min="0"
+                               max="100000000"
+                               step="0.01"
+                               placeholder="0.00"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="orderDate">
+                            Order Date <span>*</span>
+                        </label>
+                        <input type="date"
+                               id="orderDate"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dueDate">
+                            Due Date <span>*</span>
+                        </label>
+                        <input type="date"
+                               id="dueDate"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="orderStatus">
+                            Order Status <span>*</span>
+                        </label>
+                        <select id="orderStatus" required>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paymentStatus">
+                            Payment Status <span>*</span>
+                        </label>
+                        <select id="paymentStatus" required>
+                            <option value="Unpaid">Unpaid</option>
+                            <option value="Partially Paid">Partially Paid</option>
+                            <option value="Paid">Paid</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amountPaid">
+                            Amount Paid (₱)
+                        </label>
+                        <input type="number"
+                               id="amountPaid"
+                               min="0"
+                               max="100000000"
+                               step="0.01"
+                               value="0">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="assignedStaff">
+                            Assign to Staff
+                        </label>
+                        <select id="assignedStaff">
+                            <option value="">
+                                Auto-assign to next active staff
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="orderNotes">
+                            Order Notes
+                        </label>
+                        <textarea id="orderNotes"
+                                  rows="3"
+                                  maxlength="500"
+                                  placeholder="Additional instructions or order details..."></textarea>
+                    </div>
+
+                </div>
+
+                <div class="order-total-preview">
+                    <span>Order Total</span>
+                    <strong id="orderTotalPreview">₱0.00</strong>
+                </div>
+
+                <div class="modal-form-message"
+                     id="formMessage"></div>
+
+                <div class="modal-actions">
+
+                    <button type="button"
+                            class="secondary-button"
+                            id="cancelOrderButton">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            class="primary-button"
+                            id="saveOrderButton">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Save Order
+                    </button>
+                </div>
+
+            </form>
+        </section>
+    </div>
+
+    <!-- VIEW ORDER MODAL -->
+    <div class="modal-overlay"
+         id="viewOrderModal"
+         aria-hidden="true">
+
+        <section class="order-modal view-order-modal"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="viewModalTitle">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2 id="viewModalTitle">Order Details</h2>
+                    <p>Review the complete customer order information.</p>
+                </div>
+
+                <button type="button"
+                        class="modal-close-button"
+                        id="closeViewModal"
+                        aria-label="Close order details">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="orderDetailsContent"
+                 class="order-details-content"></div>
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="secondary-button"
+                        id="closeViewButton">
+                    Close
+                </button>
+
+                <button type="button"
+                        class="primary-button"
+                        id="editFromViewButton">
+                    <i class="fa-solid fa-pen"></i>
+                    Edit Order
+                </button>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-message"
+         id="toastMessage"
+         role="status"
+         aria-live="polite">
+        <i class="fa-solid fa-circle-check" id="toastIcon"></i>
+        <span id="toastText">Action completed.</span>
+    </div>
+
+    <!-- DASHBOARD-STYLE SIDEBAR CONTROLLER -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            "use strict";
+
+            const body = document.body;
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("sidebarOverlay");
+            const menuToggle = document.getElementById("menuToggle");
+            const sidebarLogout = document.getElementById("sidebarLogoutButton");
+            const profileLogout = document.getElementById("logoutButton");
+
+            const mobileScreen = window.matchMedia("(max-width: 850px)");
+            let logoutInProgress = false;
+
+            // SIDEBAR OPEN / CLOSE
+            function setSidebarState(isOpen, save = true) {
+                if (!sidebar) return;
+
+                sidebar.classList.toggle("is-hidden", !isOpen);
+                body.classList.toggle("sidebar-hidden", !isOpen);
+
+                if (overlay) {
+                    overlay.classList.toggle(
+                        "show",
+                        isOpen && mobileScreen.matches
+                    );
+                }
+
+                if (menuToggle) {
+                    menuToggle.setAttribute(
+                        "aria-expanded",
+                        String(isOpen)
+                    );
+                }
+
+                if (save) {
+                    try {
+                        localStorage.setItem(
+                            "printify-sidebar-hidden",
+                            String(!isOpen)
+                        );
+                    } catch (error) {
+                        console.warn(error);
+                    }
+                }
+            }
+
+            function initializeSidebar() {
+                let isHidden = true;
+
+                try {
+                    const saved = localStorage.getItem(
+                        "printify-sidebar-hidden"
+                    );
+
+                    if (saved !== null) {
+                        isHidden = saved === "true";
+                    }
+                } catch (error) {
+                    console.warn(error);
+                }
+
+                setSidebarState(
+                    mobileScreen.matches ? false : !isHidden,
+                    false
+                );
+            }
+
+            if (menuToggle) {
+                menuToggle.addEventListener("click", function () {
+                    const isOpen =
+                        !sidebar.classList.contains("is-hidden");
+
+                    setSidebarState(!isOpen);
+                });
+            }
+
+            if (overlay) {
+                overlay.addEventListener("click", function () {
+                    setSidebarState(false);
+                });
+            }
+
+            function handleScreenChange() {
+                if (mobileScreen.matches) {
+                    setSidebarState(false, false);
+                } else {
+                    initializeSidebar();
+                }
+            }
+
+            if (mobileScreen.addEventListener) {
+                mobileScreen.addEventListener(
+                    "change",
+                    handleScreenChange
+                );
+            } else {
+                mobileScreen.addListener(handleScreenChange);
+            }
+
+            initializeSidebar();
+
+            // DATE AND YEAR
+            const currentDate = document.getElementById("currentDate");
+            const currentYear = document.getElementById("currentYear");
+
+            if (currentDate) {
+                const span = currentDate.querySelector("span");
+
+                if (span) {
+                    span.textContent = new Date().toLocaleDateString(
+                        "en-PH",
+                        {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric"
+                        }
+                    );
+                }
+            }
+
+            if (currentYear) {
+                currentYear.textContent = new Date().getFullYear();
+            }
+
+            // LOGOUT CONFIRMATION
+            async function confirmLogout() {
+                if (
+                    window.PrintifyAlert &&
+                    typeof window.PrintifyAlert.confirm === "function"
+                ) {
+                    return window.PrintifyAlert.confirm(
+                        "Log out of Printify?",
+                        "Are you sure you want to end your administrator session?",
+                        "Yes, log out",
+                        "Stay"
+                    );
+                }
+
+                if (window.Swal) {
+                    return window.Swal.fire({
+                        icon: "question",
+                        title: "Log out of Printify?",
+                        text: "Are you sure you want to end your administrator session?",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes, log out",
+                        cancelButtonText: "Stay",
+                        reverseButtons: true
+                    });
+                }
+
+                return {
+                    isConfirmed: window.confirm(
+                        "Are you sure you want to log out?"
+                    )
+                };
+            }
+
+            async function performLogout() {
+                if (logoutInProgress) return;
+
+                const result = await confirmLogout();
+
+                if (!result || !result.isConfirmed) return;
+
+                logoutInProgress = true;
+
+                if (sidebarLogout) sidebarLogout.disabled = true;
+                if (profileLogout) profileLogout.disabled = true;
+
+                try {
+                    if (
+                        window.PrintifyAPI &&
+                        typeof window.PrintifyAPI.logout === "function"
+                    ) {
+                        await window.PrintifyAPI.logout();
+                    } else {
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("accessToken");
+                        localStorage.removeItem("user");
+                        sessionStorage.clear();
+                    }
+
+                    window.location.replace("login.html");
+
+                } catch (error) {
+                    console.error("Logout failed:", error);
+
+                    logoutInProgress = false;
+
+                    if (sidebarLogout) sidebarLogout.disabled = false;
+                    if (profileLogout) profileLogout.disabled = false;
+
+                    if (window.Swal) {
+                        window.Swal.fire({
+                            icon: "error",
+                            title: "Logout failed",
+                            text: "Please try again."
+                        });
+                    } else {
+                        alert("Logout failed. Please try again.");
+                    }
+                }
+            }
+
+            if (sidebarLogout) {
+                sidebarLogout.addEventListener(
+                    "click",
+                    performLogout
+                );
+            }
+
+            if (profileLogout) {
+                profileLogout.addEventListener(
+                    "click",
+                    performLogout
+                );
+            }
+        });
+    </script>
+
+</body>
+</html>

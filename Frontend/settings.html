@@ -1,0 +1,791 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/auth-guard.js" data-role="Admin"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Printify | Settings </title>
+
+    <link rel="icon" type="image/png" href="image/printify_logo.png">
+    <link rel="shortcut icon" type="image/png" href="image/printify_logo.png">
+
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/settings.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body class="sidebar-hidden">
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar is-hidden" id="sidebar">
+
+        <div class="sidebar-header">
+            <a href="dashboard.html" class="logo">
+                <div class="logo-icon">
+                    <img src="image/printify_logo.png" alt="Printify Logo">
+                </div>
+                <span>Printify</span>
+            </a>
+        </div>
+
+        <p class="sidebar-label">MAIN MENU</p>
+
+        <nav class="sidebar-navigation">
+
+            <a href="dashboard.html" class="nav-link">
+                <img src="image/dashboard_icon.png" class="menu-icon" alt="">
+                <span>Dashboard</span>
+            </a>
+
+            <a href="orders.html" class="nav-link">
+                <img src="image/order_icon.png" class="menu-icon" alt="">
+                <span>Orders</span>
+            </a>
+
+            <a href="inventory.html" class="nav-link">
+                <img src="image/inventory_icon.png" class="menu-icon" alt="">
+                <span>Inventory</span>
+            </a>
+
+            <a href="staff-management.html" class="nav-link">
+                <img src="image/staff_icon.png" class="menu-icon" alt="">
+                <span>Staff Management</span>
+            </a>
+
+            <a href="staff-tracking.html" class="nav-link">
+                <img src="image/stafftracking_icon.png" class="menu-icon" alt="">
+                <span>Staff Tracking</span>
+            </a>
+
+            <a href="reports.html" class="nav-link">
+                <img src="image/reports_icon.png" class="menu-icon" alt="">
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+        <p class="sidebar-label settings-label">PREFERENCES</p>
+
+        <nav class="sidebar-navigation">
+            <a href="settings.html" class="nav-link active">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" id="mainContent">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button class="icon-button menu-button"
+                        id="menuToggle"
+                        aria-label="Toggle sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div class="page-heading">
+                    <h1>Settings</h1>
+                    <p>Manage your account and system preferences.</p>
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="current-date" id="currentDate">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span></span>
+                </div>
+
+                <button class="icon-button"
+                        id="themeToggle"
+                        aria-label="Toggle theme">
+                    <img src="image/nightmode_icon.png"
+                         id="themeIcon"
+                         class="theme-image-icon"
+                         alt="Theme">
+                </button>
+
+                <button class="icon-button"
+                        id="notificationButton"
+                        aria-label="Notifications">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notification-dot"></span>
+                </button>
+
+                <div class="profile-container">
+
+                    <button class="profile-button" id="profileButton">
+
+                        <div class="profile-avatar">AD</div>
+
+                        <div class="profile-information">
+                            <strong>Administrator</strong>
+                            <span>Admin Account</span>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-down profile-arrow"></i>
+
+                    </button>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+
+                        <div class="dropdown-profile">
+                            <div class="profile-avatar">AD</div>
+                            <div>
+                                <strong>Administrator</strong>
+                                <span>Admin Account</span>
+                            </div>
+                        </div>
+
+                        <a href="settings.html">
+                            <i class="fa-solid fa-gear"></i>
+                            Settings
+                        </a>
+
+                        <button id="logoutButton">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Logout
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- SETTINGS CONTENT -->
+        <section class="dashboard-content settings-content">
+
+            <div class="content-introduction">
+                <div>
+                    <h2>System Settings</h2>
+                    <p>Customize your Printify experience and shop information.</p>
+                </div>
+
+                <div class="dashboard-status">
+                    <span class="status-indicator"></span>
+                    System Preferences
+                </div>
+            </div>
+
+            <div class="settings-layout">
+
+                <!-- SETTINGS NAVIGATION -->
+                <aside class="settings-navigation">
+
+                    <div class="settings-nav-heading">
+                        <h3>Settings Menu</h3>
+                        <p>Manage your preferences</p>
+                    </div>
+
+                    <button class="settings-tab active" data-target="profileSection">
+                        <i class="fa-regular fa-user"></i>
+                        <span>Profile Settings</span>
+                        <i class="fa-solid fa-chevron-right tab-arrow"></i>
+                    </button>
+
+                    <button class="settings-tab" data-target="shopSection">
+                        <i class="fa-solid fa-store"></i>
+                        <span>Shop Information</span>
+                        <i class="fa-solid fa-chevron-right tab-arrow"></i>
+                    </button>
+
+                    <button class="settings-tab" data-target="appearanceSection">
+                        <i class="fa-solid fa-palette"></i>
+                        <span>Appearance</span>
+                        <i class="fa-solid fa-chevron-right tab-arrow"></i>
+                    </button>
+
+                    <button class="settings-tab" data-target="preferencesSection">
+                        <i class="fa-solid fa-sliders"></i>
+                        <span>System Preferences</span>
+                        <i class="fa-solid fa-chevron-right tab-arrow"></i>
+                    </button>
+
+                </aside>
+
+                <!-- SETTINGS PANELS -->
+                <div class="settings-panels">
+
+                    <!-- PROFILE SETTINGS -->
+                    <section class="settings-panel active" id="profileSection">
+
+                        <div class="settings-panel-header">
+                            <div class="settings-panel-icon">
+                                <i class="fa-regular fa-user"></i>
+                            </div>
+
+                            <div>
+                                <h3>Profile Settings</h3>
+                                <p>Manage your administrator account information.</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-preview">
+                            <div class="large-avatar" id="avatarPreview">AD</div>
+
+                            <div>
+                                <h3 id="profileNamePreview">Administrator</h3>
+                                <p>Administrator Account</p>
+                            </div>
+                        </div>
+
+                        <form id="profileForm">
+
+                            <div class="settings-form-grid">
+
+                                <div class="settings-form-group">
+                                    <label for="adminName">Full Name</label>
+                                    <input type="text"
+                                           id="adminName"
+                                           placeholder="Enter your full name"
+                                           required>
+                                </div>
+
+                                <div class="settings-form-group">
+                                    <label for="adminEmail">Email Address</label>
+                                    <input type="email"
+                                           id="adminEmail"
+                                           placeholder="Enter your email"
+                                           required>
+                                </div>
+
+                                <div class="settings-form-group">
+                                    <label for="adminUsername">Username</label>
+                                    <input type="text"
+                                           id="adminUsername"
+                                           placeholder="Enter username"
+                                           required>
+                                </div>
+
+                                <div class="settings-form-group">
+                                    <label for="adminRole">Account Role</label>
+                                    <input type="text"
+                                           id="adminRole"
+                                           value="Administrator"
+                                           readonly>
+                                </div>
+
+                            </div>
+
+                            <div class="settings-actions">
+                                <button type="submit" class="primary-button">
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                    Save Profile
+                                </button>
+                            </div>
+
+                        </form>
+
+                        <!-- PASSWORD & SECURITY -->
+                        <div class="settings-security-section">
+
+                            <div class="settings-panel-header">
+                                <div class="settings-panel-icon">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+
+                                <div>
+                                    <h3>Password & Security</h3>
+                                    <p>Update your account password securely.</p>
+                                </div>
+                            </div>
+
+                            <form id="passwordForm">
+
+                                <div class="settings-form-grid">
+
+                                    <div class="settings-form-group full-width">
+                                        <label for="currentPassword">Current Password</label>
+
+                                        <div class="password-input-wrapper">
+                                            <input type="password"
+                                                   id="currentPassword"
+                                                   placeholder="Enter your current password"
+                                                   autocomplete="current-password"
+                                                   required>
+
+                                            <button type="button"
+                                                    class="password-visibility"
+                                                    data-password="currentPassword"
+                                                    aria-label="Show current password">
+                                                <i class="fa-regular fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="settings-form-group">
+                                        <label for="newPassword">New Password</label>
+
+                                        <div class="password-input-wrapper">
+                                            <input type="password"
+                                                   id="newPassword"
+                                                   placeholder="Enter new password"
+                                                   autocomplete="new-password"
+                                                   minlength="8"
+                                                   required>
+
+                                            <button type="button"
+                                                    class="password-visibility"
+                                                    data-password="newPassword"
+                                                    aria-label="Show new password">
+                                                <i class="fa-regular fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="settings-form-group">
+                                        <label for="confirmPassword">Confirm New Password</label>
+
+                                        <div class="password-input-wrapper">
+                                            <input type="password"
+                                                   id="confirmPassword"
+                                                   placeholder="Confirm new password"
+                                                   autocomplete="new-password"
+                                                   minlength="8"
+                                                   required>
+
+                                            <button type="button"
+                                                    class="password-visibility"
+                                                    data-password="confirmPassword"
+                                                    aria-label="Show confirm password">
+                                                <i class="fa-regular fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <p class="security-note">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    Your current password must be verified before it can be changed.
+                                </p>
+
+                                <div class="settings-actions">
+                                    <button type="submit" class="primary-button" id="updatePasswordButton">
+                                        <i class="fa-solid fa-lock"></i>
+                                        Update Password
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </section>
+
+                    <!-- SHOP INFORMATION -->
+                    <section class="settings-panel" id="shopSection">
+
+                        <div class="settings-panel-header">
+                            <div class="settings-panel-icon">
+                                <i class="fa-solid fa-store"></i>
+                            </div>
+
+                            <div>
+                                <h3>Shop Information</h3>
+                                <p>Update your printing shop details.</p>
+                            </div>
+                        </div>
+
+                        <form id="shopForm">
+
+                            <div class="settings-form-grid">
+
+                                <div class="settings-form-group full-width">
+                                    <label for="shopName">Shop Name</label>
+                                    <input type="text"
+                                           id="shopName"
+                                           placeholder="Enter shop name"
+                                           required>
+                                </div>
+
+                                <div class="settings-form-group">
+                                    <label for="shopEmail">Shop Email</label>
+                                    <input type="email"
+                                           id="shopEmail"
+                                           placeholder="Enter shop email">
+                                </div>
+
+                                <div class="settings-form-group">
+                                    <label for="shopPhone">Contact Number</label>
+                                    <input type="tel"
+                                           id="shopPhone"
+                                           placeholder="Enter contact number">
+                                </div>
+
+                                <div class="settings-form-group full-width">
+                                    <label for="shopAddress">Shop Address</label>
+                                    <textarea id="shopAddress"
+                                              rows="3"
+                                              placeholder="Enter shop address"></textarea>
+                                </div>
+
+                            </div>
+
+                            <div class="settings-actions">
+                                <button type="submit" class="primary-button">
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                    Save Shop Information
+                                </button>
+                            </div>
+
+                        </form>
+
+                    </section>
+
+                    <!-- APPEARANCE -->
+                    <section class="settings-panel" id="appearanceSection">
+
+                        <div class="settings-panel-header">
+                            <div class="settings-panel-icon">
+                                <i class="fa-solid fa-palette"></i>
+                            </div>
+
+                            <div>
+                                <h3>Appearance</h3>
+                                <p>Personalize your system background and colors.</p>
+                            </div>
+                        </div>
+
+                        <!-- DARK MODE -->
+                        <div class="appearance-option">
+
+                            <div class="appearance-information">
+                                <div class="option-icon">
+                                    <i class="fa-solid fa-moon"></i>
+                                </div>
+
+                                <div>
+                                    <h4>Dark Mode</h4>
+                                    <p>Use a darker appearance for the system.</p>
+                                </div>
+                            </div>
+
+                            <label class="switch">
+                                <input type="checkbox" id="darkModeToggle">
+                                <span class="switch-slider"></span>
+                            </label>
+
+                        </div>
+
+                        <!-- BACKGROUND IMAGE -->
+                        <div class="appearance-customization">
+
+                            <h4>
+                                <i class="fa-solid fa-image"></i>
+                                Background Image
+                            </h4>
+
+                            <p>Upload your own background image.</p>
+
+                            <div class="background-upload-controls">
+
+                                <label for="backgroundImageInput"
+                                       class="background-upload-button">
+                                    <i class="fa-solid fa-upload"></i>
+                                    Choose Background
+                                </label>
+
+                                <input type="file"
+                                       id="backgroundImageInput"
+                                       accept="image/png,image/jpeg,image/webp">
+
+                                <button type="button"
+                                        id="resetBackgroundButton"
+                                        class="secondary-button">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                    Restore Default
+                                </button>
+
+                            </div>
+
+                            <p class="background-file-name" id="backgroundFileName">
+                                Default background is active.
+                            </p>
+
+                        </div>
+
+                        <!-- BACKGROUND COLOR -->
+                        <div class="appearance-customization">
+
+                            <h4>
+                                <i class="fa-solid fa-droplet"></i>
+                                Background Color
+                            </h4>
+
+                            <p>Select a preset or choose your own color.</p>
+
+                            <div class="background-color-options">
+
+                                <button type="button"
+                                        class="color-preset"
+                                        data-color="#07130B"
+                                        style="--preset-color:#07130B"
+                                        aria-label="Dark Green"></button>
+
+                                <button type="button"
+                                        class="color-preset"
+                                        data-color="#101820"
+                                        style="--preset-color:#101820"
+                                        aria-label="Dark Blue"></button>
+
+                                <button type="button"
+                                        class="color-preset"
+                                        data-color="#21152E"
+                                        style="--preset-color:#21152E"
+                                        aria-label="Dark Purple"></button>
+
+                                <button type="button"
+                                        class="color-preset"
+                                        data-color="#241414"
+                                        style="--preset-color:#241414"
+                                        aria-label="Dark Red"></button>
+
+                                <button type="button"
+                                        class="color-preset"
+                                        data-color="#202020"
+                                        style="--preset-color:#202020"
+                                        aria-label="Dark Gray"></button>
+
+                                <label class="custom-color-picker"
+                                       for="backgroundColorInput"
+                                       title="Choose custom color">
+
+                                    <i class="fa-solid fa-plus"></i>
+
+                                    <input type="color"
+                                           id="backgroundColorInput"
+                                           value="#07130B">
+
+                                </label>
+
+                            </div>
+
+                            <p class="selected-color-label">
+                                Selected color:
+                                <strong id="selectedColorText">#07130B</strong>
+                            </p>
+
+                        </div>
+
+                        <!-- BACKGROUND BLUR -->
+                        <div class="appearance-customization">
+
+                            <div class="blur-control-heading">
+
+                                <div>
+                                    <h4>
+                                        <i class="fa-solid fa-water"></i>
+                                        Background Blur
+                                    </h4>
+
+                                    <p>Adjust the blur intensity of your background.</p>
+                                </div>
+
+                                <span id="backgroundBlurValue">12px</span>
+
+                            </div>
+
+                            <input type="range"
+                                   id="backgroundBlurSlider"
+                                   class="background-blur-slider"
+                                   min="0"
+                                   max="30"
+                                   step="1"
+                                   value="12">
+
+                            <div class="blur-range-labels">
+                                <span>0px - Clear</span>
+                                <span>30px - Maximum Blur</span>
+                            </div>
+
+                        </div>
+
+                        <!-- PREVIEW -->
+                        <div class="appearance-preview">
+
+                            <h4>Live Preview</h4>
+
+                            <div class="preview-window" id="appearanceLivePreview">
+
+                                <div class="preview-topbar">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+
+                                <div class="preview-body">
+                                    <div class="preview-sidebar"></div>
+
+                                    <div class="preview-content">
+                                        <div class="preview-line"></div>
+                                        <div class="preview-line short"></div>
+
+                                        <div class="preview-cards">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="settings-actions">
+
+                            <button type="button"
+                                    class="primary-button"
+                                    id="saveAppearanceButton">
+
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                Save Appearance
+
+                            </button>
+
+                        </div>
+
+                    </section>
+
+                    <!-- SYSTEM PREFERENCES -->
+                    <section class="settings-panel" id="preferencesSection">
+
+                        <div class="settings-panel-header">
+                            <div class="settings-panel-icon">
+                                <i class="fa-solid fa-sliders"></i>
+                            </div>
+
+                            <div>
+                                <h3>System Preferences</h3>
+                                <p>Manage notifications and general system behavior.</p>
+                            </div>
+                        </div>
+
+                        <div class="preference-item">
+
+                            <div class="preference-information">
+                                <h4>Low Stock Notifications</h4>
+                                <p>Show a notification when products reach low stock.</p>
+                            </div>
+
+                            <label class="switch">
+                                <input type="checkbox" id="lowStockNotification" checked>
+                                <span class="switch-slider"></span>
+                            </label>
+
+                        </div>
+
+                        <div class="preference-item">
+
+                            <div class="preference-information">
+                                <h4>Out of Stock Notifications</h4>
+                                <p>Notify when a product has no remaining stock.</p>
+                            </div>
+
+                            <label class="switch">
+                                <input type="checkbox" id="outOfStockNotification" checked>
+                                <span class="switch-slider"></span>
+                            </label>
+
+                        </div>
+
+                        <div class="preference-item">
+
+                            <div class="preference-information">
+                                <h4>Order Notifications</h4>
+                                <p>Show notifications for order updates.</p>
+                            </div>
+
+                            <label class="switch">
+                                <input type="checkbox" id="orderNotification" checked>
+                                <span class="switch-slider"></span>
+                            </label>
+
+                        </div>
+
+                        <div class="settings-divider"></div>
+
+                        <div class="settings-form-group">
+                            <label for="defaultCurrency">Default Currency</label>
+
+                            <select id="defaultCurrency">
+                                <option value="PHP">Philippine Peso (₱ PHP)</option>
+                                <option value="USD">US Dollar ($ USD)</option>
+                            </select>
+                        </div>
+
+                        <div class="settings-actions">
+                            <button type="button"
+                                    class="primary-button"
+                                    id="savePreferencesButton">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                Save Preferences
+                            </button>
+                        </div>
+
+                    </section>
+
+                    <!-- DANGER ZONE -->
+                    <section class="settings-danger-zone">
+
+                        <div>
+                            <h3>
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                Reset Settings
+                            </h3>
+
+                            <p>
+                                Restore your saved settings to their default values.
+                                This will not delete your inventory or orders.
+                            </p>
+                        </div>
+
+                        <button type="button"
+                                class="reset-button"
+                                id="resetSettingsButton">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            Reset Settings
+                        </button>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+            <footer class="dashboard-footer">
+                <p>© <span id="currentYear"></span> Printify Calapan. All rights reserved.</p>
+                <p>Powered by <span>Printify System</span></p>
+            </footer>
+
+        </section>
+
+    </main>
+
+    <!-- TOAST -->
+    <div class="settings-toast" id="settingsToast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="settingsToastText">Changes saved successfully.</span>
+    </div>
+
+    <script src="js/settings.js"></script>
+
+</body>
+</html>

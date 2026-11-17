@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/auth-guard.js" data-role="Staff"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Printify</title>
+    <link rel="icon" type="image/png" href="image/printify_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="css/staff-dashboard.css">
+    <link rel="stylesheet" href="css/staff-pages.css">
+    <link rel="stylesheet" href="css/staff-profile.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+    <script src="js/staff-qr.js" defer></script>
+    <script src="js/staff-common.js" defer></script>
+    <script src="js/staff-profile.js" defer></script>
+</head>
+<body class="light-mode staff-profile-page">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="staff-dashboard.html" class="logo"><img src="image/printify_logo.png" class="profile-brand-logo" alt="Printify logo"><span>Printify</span></a>
+        </div>
+        <div class="sidebar-label">WORKSPACE</div>
+        <nav class="sidebar-navigation">
+            <a href="staff-dashboard.html" class="nav-link"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span>Dashboard</span></a>
+            <a href="staff-orders.html" class="nav-link"><i class="fa-solid fa-receipt" aria-hidden="true"></i><span>My Orders</span></a>
+            <a href="staff-attendance.html" class="nav-link"><i class="fa-solid fa-square-check" aria-hidden="true"></i><span>Attendance</span></a>
+            <a href="staff-notifications.html" class="nav-link"><i class="fa-solid fa-bell" aria-hidden="true"></i><span>Notifications</span></a>
+        </nav>
+        <div class="sidebar-label settings-label">PERSONAL</div>
+        <nav class="sidebar-navigation">
+            <a href="staff-profile.html" class="nav-link active" aria-current="page"><i class="fa-solid fa-circle-user" aria-hidden="true"></i><span>My Profile</span></a>
+            <a href="staff-settings.html" class="nav-link"><i class="fa-solid fa-gear" aria-hidden="true"></i><span>Settings</span></a>
+        </nav>
+        <div class="sidebar-bottom">
+            <div class="sidebar-account">
+                <div class="account-avatar" data-staff-initials>S</div>
+                <div class="account-details"><strong data-staff-name>Staff Member</strong><span>Staff Account</span></div>
+            </div>
+            <button class="sidebar-logout" id="sidebarLogoutButton" type="button"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log Out</button>
+            <div class="sidebar-footer"><span>PRINTIFY CALAPAN</span><span>© <span data-current-year></span></span></div>
+        </div>
+    </aside>
+    <main class="main-content">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="icon-button menu-button" id="menuToggle" type="button" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
+                <div class="page-heading"><h1>My Profile</h1><p>Manage your staff contact information.</p></div>
+            </div>
+            <div class="topbar-right">
+                <span id="currentDate"></span>
+                <button class="icon-button theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"><img src="image/lightmode_icon.png" id="themeIcon" class="theme-image-icon" alt="Theme"></button>
+                <button class="icon-button" id="notificationButton" type="button" aria-label="Notifications"><i class="fa-regular fa-bell"></i></button>
+                <button class="icon-button profile-topbar-logout" id="logoutButton" type="button" aria-label="Log out"><i class="fa-solid fa-right-from-bracket"></i></button>
+                <button class="profile-account-button" id="profileButton" type="button" aria-label="Account menu" aria-expanded="false"><span class="account-avatar" data-staff-initials>S</span><span class="profile-account-text"><strong data-staff-name>Staff Member</strong><small>Staff Account</small></span><i class="fa-solid fa-chevron-down"></i></button>
+                <div class="profile-dropdown" id="profileDropdown" hidden>
+                    <a href="staff-profile.html"><i class="fa-regular fa-user"></i> My Profile</a>
+                    <a href="staff-settings.html"><i class="fa-solid fa-gear"></i> Settings</a>
+                    <button type="button" id="profileDropdownLogout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+                </div>
+            </div>
+        </header>
+        <section class="dashboard-content staff-page-content profile-content">
+            <nav class="staff-profile-breadcrumb" aria-label="Breadcrumb"><a href="staff-dashboard.html">Staff Workspace</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span aria-current="page">My Profile</span></nav>
+            <div class="content-introduction profile-introduction"><div><h2>Account Details</h2><p>Update your name and contact details.</p></div><span class="profile-overview"><span class="profile-live-dot"></span> Profile Overview</span></div>
+            <section class="panel staff-page-panel profile-main-panel">
+                <div class="profile-section-heading"><div><h2>Staff Information</h2><p>Your Printify staff account information.</p></div><i class="fa-solid fa-id-card"></i></div>
+                <div class="staff-profile-summary">
+                    <div><span>Username</span><strong id="profileUsername">—</strong></div>
+                    <div><span>Staff Code</span><strong id="profileStaffCode">—</strong></div>
+                    <div><span>Position</span><strong id="profilePosition">—</strong></div>
+                </div>
+                <section class="staff-attendance-qr-panel" aria-labelledby="staffQrHeading">
+                    <div><h2 id="staffQrHeading">Attendance QR Code</h2><p>Sign in to your staff account on your phone, then scan this code to clock in automatically.</p></div>
+                    <div id="staffAttendanceQr" class="staff-attendance-qr-code"></div>
+                    <strong id="staffAttendanceQrCodeLabel" class="staff-attendance-qr-label">—</strong>
+                </section>
+                <form id="profileForm">
+                    <div class="profile-section-heading profile-form-heading"><div><h2>Contact Information</h2><p>Keep your profile details up to date.</p></div></div>
+                    <div class="staff-page-fields">
+                        <div class="staff-page-field"><label for="profileFullName">Full Name</label><input id="profileFullName" name="fullName" required maxlength="100" autocomplete="name"></div>
+                        <div class="staff-page-field"><label for="profileEmail">Email</label><input id="profileEmail" name="email" type="email" required maxlength="254" autocomplete="email"></div>
+                        <div class="staff-page-field"><label for="profilePhone">Phone</label><input id="profilePhone" name="phone" maxlength="32" autocomplete="tel"></div>
+                        <div class="staff-page-field full-width"><label for="profileAddress">Address</label><textarea id="profileAddress" name="address" rows="3" maxlength="250" autocomplete="street-address"></textarea></div>
+                    </div>
+                    <div class="staff-page-actions"><button class="staff-page-button" id="saveProfileButton" type="submit"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Save Profile</button></div>
+                    <p class="staff-page-message" id="profileMessage" role="status" aria-live="polite"></p>
+                </form>
+            </section>
+            <footer class="profile-footer"><span>© <span data-current-year></span> Printify Calapan · Staff Workspace</span><span><i class="fa-solid fa-circle"></i> Staff Workspace</span></footer>
+        </section>
+    </main>
+</body>
+</html>

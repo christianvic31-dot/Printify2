@@ -1,0 +1,746 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/auth-guard.js" data-role="Admin"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Printify | Reports </title>
+
+    <link rel="icon" type="image/png" href="image/printify_logo.png">
+    <link rel="shortcut icon" type="image/png" href="image/printify_logo.png">
+
+    <!-- Dashboard and Reports CSS -->
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/reports.css">
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+</head>
+
+<body class="dark-mode sidebar-hidden">
+
+    <!-- =====================================================
+         SIDEBAR OVERLAY
+    ====================================================== -->
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside id="sidebar" class="sidebar is-hidden">
+
+        <!-- Logo -->
+        <div class="sidebar-header">
+            <a href="dashboard.html" class="logo">
+                <span class="logo-icon">
+                    <img
+                        src="image/printify_logo.png"
+                        alt="Printify Logo"
+                    >
+                </span>
+
+                <span>Printify</span>
+            </a>
+        </div>
+
+        <!-- Main Menu -->
+        <div class="sidebar-label">MAIN MENU</div>
+
+        <nav class="sidebar-navigation">
+
+            <a href="dashboard.html" class="nav-link">
+                <img src="image/dashboard_icon.png" class="menu-icon" alt="">
+                <span>Dashboard</span>
+            </a>
+
+            <a href="orders.html" class="nav-link">
+                <img src="image/order_icon.png" class="menu-icon" alt="">
+                <span>Orders</span>
+            </a>
+
+            <a href="inventory.html" class="nav-link">
+                <img src="image/inventory_icon.png" class="menu-icon" alt="">
+                <span>Inventory</span>
+            </a>
+
+            <a href="staff-management.html" class="nav-link">
+                <img src="image/staff_icon.png" class="menu-icon" alt="">
+                <span>Staff Management</span>
+            </a>
+
+            <a href="staff-tracking.html" class="nav-link">
+                <img src="image/stafftracking_icon.png" class="menu-icon" alt="">
+                <span>Staff Tracking</span>
+            </a>
+
+            <a href="reports.html" class="nav-link active">
+                <img src="image/reports_icon.png" class="menu-icon" alt="">
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+        <!-- Preferences -->
+        <div class="sidebar-label settings-label">
+            PREFERENCES
+        </div>
+
+        <nav class="sidebar-navigation">
+
+            <a href="settings.html" class="nav-link">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+        <!-- Sidebar bottom logout -->
+        <div class="sidebar-footer">
+            <button type="button" class="sidebar-logout-button" id="sidebarLogoutButton">
+                <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+                <span>Log Out</span>
+            </button>
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main id="mainContent" class="main-content">
+
+        <!-- =================================================
+             TOPBAR
+        ================================================== -->
+
+        <header class="topbar">
+
+            <!-- Left Side -->
+            <div class="topbar-left">
+
+                <!-- Sidebar Toggle -->
+                <button
+                    type="button"
+                    class="icon-button menu-button"
+                    id="menuToggle"
+                    aria-label="Toggle sidebar"
+                    aria-expanded="false"
+                    title="Toggle sidebar"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <!-- Page Heading -->
+                <div class="page-heading">
+                    <h1>Reports</h1>
+                    <p>Sales and business performance overview</p>
+                </div>
+
+            </div>
+
+
+            <!-- Right Side -->
+            <div class="topbar-right">
+
+                <!-- Current Date -->
+                <div class="current-date" id="currentDate">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Loading date...</span>
+                </div>
+
+                <!-- Theme Toggle -->
+                <button
+                    type="button"
+                    class="icon-button theme-toggle"
+                    id="themeToggle"
+                    aria-label="Switch to light mode"
+                    title="Switch to light mode"
+                >
+                    <img
+                        src="image/lightmode_icon.png"
+                        alt="Switch to light mode"
+                        class="theme-image-icon"
+                        id="themeIcon"
+                    >
+                </button>
+
+                <!-- Notification -->
+                <button
+                    type="button"
+                    class="icon-button notification-button"
+                    id="notificationButton"
+                    aria-label="Notifications"
+                    title="Notifications"
+                >
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notification-dot"></span>
+                </button>
+
+                <!-- Profile -->
+                <div class="profile-container">
+
+                    <button
+                        type="button"
+                        class="profile-button"
+                        id="profileButton"
+                        aria-expanded="false"
+                        aria-label="Open profile menu"
+                    >
+                        <div class="profile-avatar">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+
+                        <div class="profile-information">
+                            <strong>Administrator</strong>
+                            <span>Admin Account</span>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-down profile-arrow"></i>
+                    </button>
+
+                    <!-- Profile Dropdown -->
+                    <div class="profile-dropdown" id="profileDropdown">
+
+                        <div class="dropdown-profile">
+                            <div class="profile-avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+
+                            <div>
+                                <strong>Administrator</strong>
+                                <span>Admin Account</span>
+                            </div>
+                        </div>
+
+                        <div class="dropdown-divider"></div>
+
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fa-solid fa-gear"></i>
+                            <span>Settings</span>
+                        </a>
+
+                        <button
+                            type="button"
+                            class="dropdown-item logout-item"
+                            id="logoutButton"
+                        >
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Log Out</span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             REPORTS CONTENT
+        ================================================== -->
+
+        <section class="dashboard-content reports-content">
+
+            <nav class="breadcrumb" aria-label="Breadcrumb" style="margin:0 0 24px 0;">
+                <a href="dashboard.html"><span>Dashboard</span></a>
+                <i class="fa-solid fa-chevron-right breadcrumb-separator" aria-hidden="true"></i>
+                <span class="breadcrumb-current" aria-current="page">Reports</span>
+            </nav>
+
+            <!-- =============================================
+                 REPORT INTRODUCTION
+            ============================================== -->
+
+            <div class="reports-introduction">
+                <!-- Report Actions -->
+                <div class="reports-actions">
+
+                    <button
+                        type="button"
+                        class="reports-button secondary-button"
+                        id="printReportButton"
+                    >
+                        <i class="fa-solid fa-print"></i>
+                        <span>Print Report</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="reports-button primary-button"
+                        id="exportReportButton"
+                    >
+                        <i class="fa-solid fa-file-csv"></i>
+                        <span>Export CSV</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =============================================
+                 SALES OVERVIEW
+            ============================================== -->
+
+            <section class="panel reports-panel sales-overview-panel">
+
+                <div class="reports-section-heading">
+
+                    <div>
+                        <h3>Sales Overview</h3>
+                        <p>
+                            Track your sales performance over different
+                            periods.
+                        </p>
+                    </div>
+
+                    <!-- Period Filter -->
+                    <div class="sales-period-filter">
+
+                        <button
+                            type="button"
+                            class="period-button active"
+                            data-period="daily"
+                        >
+                            Daily
+                        </button>
+
+                        <button
+                            type="button"
+                            class="period-button"
+                            data-period="weekly"
+                        >
+                            Weekly
+                        </button>
+
+                        <button
+                            type="button"
+                            class="period-button"
+                            data-period="monthly"
+                        >
+                            Monthly
+                        </button>
+
+                        <button
+                            type="button"
+                            class="period-button"
+                            data-period="yearly"
+                        >
+                            Yearly
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Sales Chart -->
+                <div class="sales-chart-container">
+                    <canvas id="salesChart"></canvas>
+                </div>
+
+
+                <!-- Chart Footer -->
+                <div class="chart-footer">
+
+                    <span>
+                        <span class="chart-legend-dot"></span>
+                        Total Sales
+                    </span>
+
+                    <span id="chartPeriodLabel">
+                        Daily Sales
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <!-- =============================================
+                 ORDER REPORTS
+            ============================================== -->
+
+            <section class="panel reports-panel order-reports-panel">
+
+                <div class="reports-section-heading">
+
+                    <div>
+                        <h3>Order Reports</h3>
+                        <p>
+                            Overview of orders based on their current
+                            status.
+                        </p>
+                    </div>
+
+                    <div class="order-report-date">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span id="orderReportDate">Loading date...</span>
+                    </div>
+
+                </div>
+
+
+                <!-- Order Report Content -->
+                <div class="order-report-content">
+
+                    <!-- Doughnut Chart -->
+                    <div class="order-chart-container">
+                        <canvas id="orderChart"></canvas>
+                    </div>
+
+
+                    <!-- Order Status Breakdown -->
+                    <div
+                        class="order-status-breakdown"
+                        id="orderStatusBreakdown"
+                    >
+
+                        <!-- Pending -->
+                        <div class="order-status-item">
+
+                            <span class="status-indicator pending-indicator"></span>
+
+                            <div class="order-status-information">
+                                <strong>Pending</strong>
+                                <span>Orders awaiting confirmation</span>
+                            </div>
+
+                            <strong
+                                class="order-status-count"
+                                id="pendingOrderCount"
+                            >
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Processing -->
+                        <div class="order-status-item">
+
+                            <span class="status-indicator processing-indicator"></span>
+
+                            <div class="order-status-information">
+                                <strong>Processing</strong>
+                                <span>Orders currently being processed</span>
+                            </div>
+
+                            <strong
+                                class="order-status-count"
+                                id="processingOrderCount"
+                            >
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Ready for Pickup -->
+                        <div class="order-status-item">
+
+                            <span class="status-indicator ready-indicator"></span>
+
+                            <div class="order-status-information">
+                                <strong>Ready for Pickup</strong>
+                                <span>Orders ready for customer pickup</span>
+                            </div>
+
+                            <strong
+                                class="order-status-count"
+                                id="readyOrderCount"
+                            >
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Completed -->
+                        <div class="order-status-item">
+
+                            <span class="status-indicator completed-indicator"></span>
+
+                            <div class="order-status-information">
+                                <strong>Completed</strong>
+                                <span>Successfully completed orders</span>
+                            </div>
+
+                            <strong
+                                class="order-status-count"
+                                id="completedOrderCount"
+                            >
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Cancelled -->
+                        <div class="order-status-item">
+
+                            <span class="status-indicator cancelled-indicator"></span>
+
+                            <div class="order-status-information">
+                                <strong>Cancelled</strong>
+                                <span>Orders cancelled by the customer or staff</span>
+                            </div>
+
+                            <strong
+                                class="order-status-count"
+                                id="cancelledOrderCount"
+                            >
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =============================================
+                 SALES HISTORY
+            ============================================== -->
+
+            <section class="panel reports-panel sales-history-panel">
+
+                <!-- Section Heading -->
+                <div class="reports-section-heading sales-history-heading">
+
+                    <div>
+                        <h3>Sales History</h3>
+                        <p>
+                            Review and filter your previous customer
+                            transactions.
+                        </p>
+                    </div>
+
+                    <span
+                        class="record-count"
+                        id="salesRecordCount"
+                    >
+                        0 records
+                    </span>
+
+                </div>
+
+
+                <!-- =========================================
+                     FILTERS
+                ========================================== -->
+
+                <div class="reports-filter-container">
+
+                    <!-- Search -->
+                    <div class="report-search-wrapper">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input
+                            type="search"
+                            id="salesSearch"
+                            placeholder="Search order ID or customer..."
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+                    <!-- Start Date -->
+                    <div class="report-date-filter">
+
+                        <label for="startDate">Start Date</label>
+
+                        <input
+                            type="date"
+                            id="startDate"
+                        >
+
+                    </div>
+
+
+                    <!-- End Date -->
+                    <div class="report-date-filter">
+
+                        <label for="endDate">End Date</label>
+
+                        <input
+                            type="date"
+                            id="endDate"
+                        >
+
+                    </div>
+
+
+                    <!-- Order Status -->
+                    <div class="report-select-filter">
+
+                        <select
+                            id="orderStatusFilter"
+                            aria-label="Filter by order status"
+                        >
+                            <option value="all">All Order Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Ready for Pickup">Ready for Pickup</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+
+                    </div>
+
+
+                    <!-- Payment Status -->
+                    <div class="report-select-filter">
+
+                        <select
+                            id="paymentStatusFilter"
+                            aria-label="Filter by payment status"
+                        >
+                            <option value="all">All Payment Status</option>
+                            <option value="Paid">Paid</option>
+                            <option value="Partially Paid">Partially Paid</option>
+                            <option value="Unpaid">Unpaid</option>
+                            <option value="Refunded">Refunded</option>
+                        </select>
+
+                    </div>
+
+
+                    <!-- Clear Filters -->
+                    <button
+                        type="button"
+                        class="clear-filter-button"
+                        id="clearFiltersButton"
+                    >
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Clear</span>
+                    </button>
+
+                </div>
+
+
+                <!-- =========================================
+                     SALES TABLE
+                ========================================== -->
+
+                <div class="reports-table-container">
+
+                    <table class="reports-table">
+
+                        <thead>
+                            <tr>
+                                <th>ORDER ID</th>
+                                <th>CUSTOMER</th>
+                                <th>ORDER DATE</th>
+                                <th>AMOUNT</th>
+                                <th>ORDER STATUS</th>
+                                <th>PAYMENT STATUS</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="salesTableBody">
+                            <!-- Generated by reports.js -->
+                        </tbody>
+
+                    </table>
+
+
+                    <!-- Empty State -->
+                    <div
+                        class="reports-empty-state"
+                        id="salesEmptyState"
+                    >
+
+                        <div class="empty-state-icon">
+                            <i class="fa-solid fa-file-circle-xmark"></i>
+                        </div>
+
+                        <h4>No Records Found</h4>
+
+                        <p>
+                            No sales records match your current filters.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Table Footer -->
+                <div class="reports-table-footer">
+
+                    <span id="salesTableInformation">
+                        Showing 0 records
+                    </span>
+
+                    <span>
+                        Printify Sales Records
+                    </span>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         TOAST NOTIFICATION
+    ====================================================== -->
+
+    <div
+        class="toast-message"
+        id="toastMessage"
+        role="status"
+        aria-live="polite"
+    >
+        <i
+            class="fa-solid fa-circle-check"
+            id="toastIcon"
+        ></i>
+
+        <span id="toastText">
+            Notification message
+        </span>
+    </div>
+
+
+    <!-- =====================================================
+         SCRIPTS
+    ====================================================== -->
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Reports JavaScript -->
+    <script src="js/reports.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,1383 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Printify | Staff Management</title>
+
+    <script src="js/auth-guard.js"
+            data-role="Admin"></script>
+
+    <link rel="icon"
+          type="image/png"
+          href="image/printify_logo.png">
+
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/staff-management.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+            defer></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"
+            defer></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
+            defer></script>
+
+    <script src="js/staff-qr.js" defer></script>
+    <script src="js/staff-management.js" defer></script>
+
+    <script>
+        (function () {
+            const theme = localStorage.getItem("printify-theme");
+
+            if (theme === "dark") {
+                document.documentElement.classList.add("initial-dark");
+            }
+
+            if (
+                localStorage.getItem("printify-sidebar-hidden") === "true"
+            ) {
+                document.documentElement.classList.add(
+                    "initial-sidebar-hidden"
+                );
+            }
+        })();
+    </script>
+</head>
+
+<body>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay"
+         id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-header">
+            <a href="dashboard.html" class="logo">
+                <span class="logo-icon">
+                    <img src="image/printify_logo.png"
+                         alt="Printify Logo">
+                </span>
+                <span>Printify</span>
+            </a>
+        </div>
+
+        <div class="sidebar-label">MAIN MENU</div>
+
+        <nav class="sidebar-navigation">
+
+            <a href="dashboard.html" class="nav-link">
+                <img src="image/dashboard_icon.png" alt="">
+                <span>Dashboard</span>
+            </a>
+
+            <a href="orders.html" class="nav-link">
+                <img src="image/order_icon.png" alt="">
+                <span>Orders</span>
+            </a>
+
+            <a href="inventory.html" class="nav-link">
+                <img src="image/inventory_icon.png" alt="">
+                <span>Inventory</span>
+            </a>
+
+            <a href="staff-management.html"
+               class="nav-link active"
+               aria-current="page">
+                <img src="image/staff_icon.png" alt="">
+                <span>Staff Management</span>
+            </a>
+
+            <a href="staff-tracking.html" class="nav-link">
+                <img src="image/stafftracking_icon.png" alt="">
+                <span>Staff Tracking</span>
+            </a>
+
+            <a href="reports.html" class="nav-link">
+                <img src="image/reports_icon.png" alt="">
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-label settings-label">
+            PREFERENCES
+        </div>
+
+        <nav class="sidebar-navigation">
+            <a href="settings.html" class="nav-link">
+                <img src="image/settings_ion.png" alt="">
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button type="button"
+                    class="sidebar-logout-button"
+                    id="sidebarLogoutButton">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Log Out</span>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" id="mainContent">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button type="button"
+                        class="icon-button menu-button"
+                        id="menuToggle"
+                        aria-label="Toggle sidebar"
+                        aria-controls="sidebar"
+                        aria-expanded="true">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div class="page-heading">
+                    <h1>Staff Management</h1>
+                    <p>
+                        Manage staff information and account records.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="current-date" id="currentDate">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Loading date...</span>
+                </div>
+
+                <button type="button"
+                        class="icon-button theme-toggle"
+                        id="themeToggle"
+                        aria-label="Switch theme">
+                    <img src="image/nightmode_icon.png"
+                         alt="Theme"
+                         id="themeIcon"
+                         class="theme-image-icon">
+                </button>
+
+                <button type="button"
+                        class="icon-button notification-button"
+                        id="notificationButton"
+                        aria-label="Notifications">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notification-dot"></span>
+                </button>
+
+                <div class="profile-container">
+
+                    <button type="button"
+                            class="profile-button"
+                            id="profileButton"
+                            aria-expanded="false">
+
+                        <div class="profile-avatar">AD</div>
+
+                        <div class="profile-information">
+                            <strong>Administrator</strong>
+                            <span>Admin Account</span>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-down profile-arrow"></i>
+                    </button>
+
+                    <div class="profile-dropdown"
+                         id="profileDropdown">
+
+                        <div class="dropdown-profile">
+                            <div class="profile-avatar">AD</div>
+                            <div>
+                                <strong>Administrator</strong>
+                                <span>Admin Account</span>
+                            </div>
+                        </div>
+
+                        <a href="settings.html">
+                            <i class="fa-solid fa-gear"></i>
+                            Account Settings
+                        </a>
+
+                        <button type="button"
+                                id="logoutButton"
+                                class="logout-button">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Log Out
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- STAFF CONTENT -->
+        <section class="dashboard-content staff-management-content">
+
+            <!-- BREADCRUMB -->
+            <nav class="breadcrumb"
+                 aria-label="Breadcrumb">
+
+                <a href="dashboard.html">
+                    <span>Dashboard</span>
+                </a>
+
+                <i class="fa-solid fa-chevron-right breadcrumb-separator"
+                   aria-hidden="true"></i>
+
+                <span class="breadcrumb-current"
+                      aria-current="page">
+                    Staff Management
+                </span>
+
+            </nav>
+
+            <!-- STAFF DIRECTORY / ARCHIVE PANEL -->
+            <div class="panel staff-directory-panel">
+
+                <!-- PANEL HEADING -->
+                <div class="staff-directory-heading">
+
+                    <div>
+                        <h2 id="staffDirectoryHeading">
+                            Staff Directory
+                        </h2>
+
+                        <p id="staffDirectorySubtitle">
+                            View staff details, manage accounts,
+                            and monitor staff status.
+                        </p>
+                    </div>
+
+                    <div class="staff-header-actions">
+
+                        <span class="staff-count-badge"
+                              id="staffCountBadge">
+                            0 records
+                        </span>
+
+                        <button type="button"
+                                class="secondary-button archive-list-button"
+                                id="archivedStaffButton">
+                            <i class="fa-solid fa-box-archive"></i>
+                            <span id="archiveToggleText">
+                                Archived Staff
+                            </span>
+                        </button>
+
+                        <button type="button"
+                                class="primary-button"
+                                id="addStaffButton">
+                            <i class="fa-solid fa-plus"></i>
+                            Add Staff
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- SEARCH AND FILTERS -->
+                <div class="staff-toolbar">
+
+                    <div class="staff-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        <input type="search"
+                               id="searchInput"
+                               placeholder="Search staff name or ID..."
+                               autocomplete="off">
+                    </div>
+
+                    <div class="staff-filters">
+
+                        <div class="staff-filter-group">
+                            <label for="positionFilter">
+                                Position
+                            </label>
+
+                            <select id="positionFilter">
+                                <option value="all">
+                                    All Positions
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="staff-filter-group">
+                            <label for="statusFilter">
+                                Staff Status
+                            </label>
+
+                            <select id="statusFilter">
+                                <option value="all">All Status</option>
+                                <option value="Active">Active</option>
+                                <option value="On Leave">On Leave</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+
+                        <button type="button"
+                                class="secondary-button"
+                                id="resetFiltersButton">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            Reset
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- ACTIVE STAFF TABLE -->
+                <div class="table-wrapper staff-table-wrapper"
+                     id="activeStaffTableWrapper">
+
+                    <table class="staff-management-table">
+
+                        <thead>
+                            <tr>
+                                <th>Staff Member</th>
+                                <th>Staff ID</th>
+                                <th>Position</th>
+                                <th>Contact Number</th>
+                                <th>Orders Received</th>
+                                <th>Date Added</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="staffTableBody">
+                            <tr>
+                                <td colspan="8"
+                                    class="empty-state">
+                                    No staff members found.
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+
+                <!-- ARCHIVED STAFF TABLE -->
+                <div class="table-wrapper staff-table-wrapper"
+                     id="archivedStaffTableWrapper"
+                     hidden>
+
+                    <table class="staff-management-table">
+
+                        <thead>
+                            <tr>
+                                <th>Staff Member</th>
+                                <th>Staff ID</th>
+                                <th>Position</th>
+                                <th>Contact Number</th>
+                                <th>Archived Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="archivedStaffTableBody">
+                            <tr>
+                                <td colspan="6"
+                                    class="empty-state">
+                                    No archived staff members.
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+
+                <!-- TABLE FOOTER -->
+                <div class="staff-table-footer">
+
+                    <p id="resultsCount">
+                        Showing 0 staff members
+                    </p>
+
+                    <div class="staff-export-actions">
+
+                        <button type="button"
+                                class="secondary-button"
+                                id="exportStaffCsvButton">
+                            <i class="fa-solid fa-file-csv"></i>
+                            Export CSV
+                        </button>
+
+                        <button type="button"
+                                class="secondary-button"
+                                id="exportStaffExcelButton">
+                            <i class="fa-solid fa-file-excel"></i>
+                            Export Excel
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <footer class="dashboard-footer">
+                <p>
+                    © <span id="currentYear"></span>
+                    Printify. Printing Shop Tracking and Inventory System.
+                </p>
+
+                <p class="footer-tagline">
+                    Manage smarter. Print better.
+                </p>
+            </footer>
+
+        </section>
+    </main>
+
+    <!-- ADD / EDIT STAFF MODAL -->
+    <div class="modal-overlay"
+         id="staffFormModal"
+         aria-hidden="true">
+
+        <div class="staff-modal staff-form-modal"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="staffFormTitle">
+
+            <div class="modal-header">
+
+                <div class="modal-heading-content">
+
+                    <span class="modal-eyebrow">
+                        <i class="fa-solid fa-user-plus"></i>
+                        STAFF DIRECTORY
+                    </span>
+
+                    <h2 id="staffFormTitle">
+                        Add New Staff
+                    </h2>
+
+                    <p id="staffFormSubtitle">
+                        Enter the staff member's information below.
+                    </p>
+
+                </div>
+
+                <button type="button"
+                        class="modal-close-button"
+                        id="closeStaffFormModal"
+                        aria-label="Close modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+            <form id="staffForm">
+
+                <input type="hidden" id="editingStaffId">
+
+                <div class="staff-form-section">
+
+                    <div class="form-section-heading">
+
+                        <span class="form-section-icon">
+                            <i class="fa-solid fa-id-card"></i>
+                        </span>
+
+                        <div>
+                            <h3>Personal Information</h3>
+                            <p>
+                                Provide the basic details of the staff member.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="staff-form-grid">
+
+                        <div class="form-group">
+                            <label for="staffName">
+                                Full Name <span>*</span>
+                            </label>
+
+                            <div class="input-with-icon">
+                                <i class="fa-regular fa-user"></i>
+
+                                <input type="text"
+                                       id="staffName"
+                                       placeholder="Enter full name"
+                                       autocomplete="name"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="staffEmail">
+                                Email Address <span>*</span>
+                            </label>
+
+                            <div class="input-with-icon">
+                                <i class="fa-regular fa-envelope"></i>
+
+                                <input type="email"
+                                       id="staffEmail"
+                                       placeholder="example@email.com"
+                                       autocomplete="email"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="staffPhone">
+                                Contact Number <span>*</span>
+                            </label>
+
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-phone"></i>
+
+                                <input type="tel"
+                                       id="staffPhone"
+                                       placeholder="09XXXXXXXXX"
+                                       maxlength="11"
+                                       inputmode="numeric"
+                                       autocomplete="tel"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="staffUsername">
+                                Login Username <span>*</span>
+                            </label>
+
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-at"></i>
+
+                                <input type="text"
+                                       id="staffUsername"
+                                       placeholder="4-20 letters, numbers, _"
+                                       autocomplete="off"
+                                       maxlength="20">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="staffPassword">
+                                <span id="staffPasswordLabel">
+                                    Login Password
+                                </span>
+
+                                <span id="staffPasswordRequired">*</span>
+                            </label>
+
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input type="password"
+                                       id="staffPassword"
+                                       placeholder="8+ chars, upper, lower, number, symbol"
+                                       autocomplete="new-password"
+                                       maxlength="128">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="staffPosition">
+                                Position <span>*</span>
+                            </label>
+
+                            <div class="input-with-icon select-with-icon">
+                                <i class="fa-solid fa-briefcase"></i>
+
+                                <select id="staffPosition" required>
+                                    <option value="">
+                                        Select position
+                                    </option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Cashier">Cashier</option>
+                                    <option value="Print Operator">
+                                        Print Operator
+                                    </option>
+                                    <option value="Graphic Designer">
+                                        Graphic Designer
+                                    </option>
+                                    <option value="Production Staff">
+                                        Production Staff
+                                    </option>
+                                    <option value="Customer Service">
+                                        Customer Service
+                                    </option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="staffAddress">
+                                Address
+                            </label>
+
+                            <div class="input-with-icon textarea-with-icon">
+                                <i class="fa-solid fa-location-dot"></i>
+
+                                <textarea id="staffAddress"
+                                          rows="3"
+                                          placeholder="Enter staff address"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="staffStatus">
+                                Account Status
+                            </label>
+
+                            <div class="input-with-icon select-with-icon">
+                                <i class="fa-solid fa-toggle-on"></i>
+
+                                <select id="staffStatus">
+                                    <option value="Active">Active</option>
+                                    <option value="On Leave">On Leave</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+
+                    <button type="button"
+                            class="secondary-button"
+                            id="cancelStaffForm">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            class="primary-button"
+                            id="saveStaffButton">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Save Staff
+                    </button>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- VIEW STAFF MODAL -->
+    <div class="modal-overlay"
+         id="viewStaffModal"
+         aria-hidden="true">
+
+        <div class="staff-modal view-staff-modal"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="viewStaffTitle">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <span class="modal-eyebrow">
+                        <i class="fa-solid fa-user"></i>
+                        STAFF PROFILE
+                    </span>
+
+                    <h2 id="viewStaffTitle">
+                        Staff Information
+                    </h2>
+
+                    <p>
+                        View the complete staff member details.
+                    </p>
+
+                </div>
+
+                <button type="button"
+                        class="modal-close-button"
+                        id="closeViewStaffModal"
+                        aria-label="Close modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+            <div id="staffDetailsContent"
+                 class="staff-details-content"></div>
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="print-qr-button"
+                        id="printStaffQrButton">
+                    <i class="fa-solid fa-print"></i>
+                    Print Staff QR
+                </button>
+
+                <button type="button"
+                        class="secondary-button"
+                        id="closeViewStaffButton">
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ARCHIVE CONFIRMATION MODAL -->
+    <div class="modal-overlay"
+         id="deleteStaffModal"
+         aria-hidden="true">
+
+        <div class="staff-modal delete-staff-modal"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="deleteStaffTitle">
+
+            <div class="delete-icon">
+                <i class="fa-solid fa-box-archive"></i>
+            </div>
+
+            <h2 id="deleteStaffTitle">
+                Archive Staff Member?
+            </h2>
+
+            <p>
+                Are you sure you want to archive
+                <strong id="deleteStaffName">
+                    this staff member
+                </strong>?
+                You can restore this staff member later.
+            </p>
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="secondary-button"
+                        id="cancelDeleteStaff">
+                    Cancel
+                </button>
+
+                <button type="button"
+                        class="danger-button"
+                        id="confirmDeleteStaff">
+                    <i class="fa-solid fa-box-archive"></i>
+                    Archive Staff
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast-message"
+         id="toastMessage"
+         role="status"
+         aria-live="polite">
+
+        <i class="fa-solid fa-circle-check"
+           id="toastIcon"></i>
+
+        <span id="toastText">
+            Notification message
+        </span>
+
+    </div>
+
+</body>
+
+
+<!-- PRINTIFY OFFICIAL STAFF QR PRINTING -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    "use strict";
+
+    const LOGO_PATH = "image/printify_logo.png";
+
+    // Remove Order Statistics only from View Staff
+    const detailsContainer =
+        document.getElementById("staffDetailsContent");
+
+    function removeOrderStatistics() {
+        if (!detailsContainer) return;
+
+        detailsContainer
+            .querySelectorAll(".printify-info-section")
+            .forEach(section => {
+                const title = section.querySelector("h4");
+
+                if (
+                    title?.textContent.trim().toLowerCase() ===
+                    "order statistics"
+                ) {
+                    section.remove();
+                }
+            });
+    }
+
+    if (detailsContainer) {
+        const observer = new MutationObserver(
+            removeOrderStatistics
+        );
+
+        observer.observe(detailsContainer, {
+            childList: true
+        });
+
+        removeOrderStatistics();
+    }
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(
+            /[&<>"']/g,
+            character => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[character]
+        );
+    }
+
+    function getSelectedStaff() {
+        const staffId = document
+            .querySelector(
+                "#viewStaffModal .printify-profile-id"
+            )
+            ?.textContent.trim();
+
+        if (!staffId) return null;
+
+        try {
+            const staffList = JSON.parse(
+                localStorage.getItem("printifyStaff") || "[]"
+            );
+
+            return staffList.find(
+                staff => String(staff.id) === staffId
+            ) || null;
+
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    }
+
+    function printOfficialStaffQR() {
+        const staff = getSelectedStaff();
+
+        if (!staff) {
+            alert("Staff information not found.");
+            return;
+        }
+
+        if (typeof QRCode === "undefined") {
+            alert("QR Code library is unavailable.");
+            return;
+        }
+
+        const printWindow = window.open(
+            "",
+            "_blank",
+            "width=850,height=950"
+        );
+
+        if (!printWindow) {
+            alert("Please allow pop-ups to print.");
+            return;
+        }
+
+        try {
+            const qrContainer =
+                document.createElement("div");
+
+            new QRCode(qrContainer, {
+                text: JSON.stringify({
+                    type: "PrintifyStaff",
+                    staffId: String(staff.id)
+                }),
+                width: 220,
+                height: 220,
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            const canvas =
+                qrContainer.querySelector("canvas");
+
+            const qrImage =
+                qrContainer.querySelector("img");
+
+            const qrURL = canvas
+                ? canvas.toDataURL("image/png")
+                : qrImage?.src;
+
+            if (!qrURL) {
+                throw new Error("Unable to generate QR.");
+            }
+
+            const logoURL = new URL(
+                LOGO_PATH,
+                document.baseURI
+            ).href;
+
+            const printedDate = new Date()
+                .toLocaleString("en-PH", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+
+            const name = escapeHTML(staff.name);
+            const id = escapeHTML(staff.id);
+            const position = escapeHTML(
+                staff.position || "Staff"
+            );
+            const email = escapeHTML(
+                staff.email || "—"
+            );
+            const status = escapeHTML(
+                staff.status || "Inactive"
+            );
+
+            printWindow.document.open();
+
+            printWindow.document.write(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Printify Calapan - Official Staff Identification</title>
+
+<style>
+@page {
+    size: A4 portrait;
+    margin: 15mm;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1e293b;
+    background: white;
+}
+
+.document {
+    max-width: 780px;
+    margin: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.brand-logo {
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
+}
+
+.brand h1 {
+    font-size: 30px;
+    color: #14532d;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.brand p {
+    font-size: 10px;
+    color: #64748b;
+    letter-spacing: 1px;
+    margin: 6px 0 0;
+}
+
+.document-type {
+    text-align: right;
+}
+
+.document-type strong {
+    display: block;
+    font-size: 12px;
+    color: #166534;
+}
+
+.document-type span {
+    display: block;
+    font-size: 10px;
+    color: #64748b;
+    margin-top: 6px;
+}
+
+.green-line {
+    height: 5px;
+    background: linear-gradient(
+        90deg,
+        #14532d,
+        #16a34a,
+        #86efac
+    );
+    border-radius: 4px;
+}
+
+.title {
+    text-align: center;
+    margin: 30px 0 8px;
+    font-size: 24px;
+    color: #14532d;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+.staff-card {
+    border: 1.5px solid #bbdfc4;
+    border-radius: 15px;
+    padding: 28px;
+    text-align: center;
+}
+
+.identification-label {
+    display: inline-block;
+    background: #dcfce7;
+    color: #166534;
+    padding: 9px 17px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.qr-frame {
+    width: 250px;
+    height: 250px;
+    padding: 15px;
+    margin: 25px auto 12px;
+    border: 2px solid #166534;
+    border-radius: 12px;
+}
+
+.qr-frame img {
+    width: 216px;
+    height: 216px;
+    object-fit: contain;
+}
+
+.scan-text {
+    color: #64748b;
+    font-size: 11px;
+}
+
+.staff-name {
+    margin: 25px 0 7px;
+    font-size: 25px;
+    color: #14532d;
+}
+
+.staff-position {
+    color: #475569;
+    font-size: 14px;
+}
+
+.staff-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    text-align: left;
+}
+
+.staff-table td {
+    padding: 12px;
+    font-size: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.staff-table td:first-child {
+    color: #64748b;
+    width: 38%;
+}
+
+.staff-table td:last-child {
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.notice {
+    margin-top: 25px;
+    padding: 15px;
+    background: #f0fdf4;
+    border-left: 4px solid #16a34a;
+    font-size: 11px;
+    line-height: 1.7;
+    color: #475569;
+}
+
+.footer {
+    margin-top: 35px;
+    padding-top: 15px;
+    border-top: 2px solid #166534;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.footer strong {
+    color: #166534;
+    font-size: 12px;
+}
+
+.footer p {
+    margin: 6px 0;
+    color: #64748b;
+    font-size: 10px;
+}
+
+.footer-right {
+    text-align: right;
+}
+
+.bottom-note {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 9px;
+    color: #94a3b8;
+}
+
+@media print {
+    body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .staff-card {
+        break-inside: avoid;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="document">
+
+    <!-- OFFICIAL HEADER -->
+    <header class="header">
+
+        <div class="brand">
+            <img
+                src="${logoURL}"
+                class="brand-logo"
+                alt="Printify Logo"
+            >
+
+            <div>
+                <h1>PRINTIFY</h1>
+                <p>PRINTING SERVICES & MANAGEMENT</p>
+            </div>
+        </div>
+
+        <div class="document-type">
+            <strong>OFFICIAL STAFF RECORD</strong>
+            <span>STAFF IDENTIFICATION</span>
+        </div>
+
+    </header>
+
+    <div class="green-line"></div>
+
+    <h2 class="title">
+        STAFF IDENTIFICATION
+    </h2>
+
+    <p class="subtitle">
+        Printify Staff Identification Document
+    </p>
+
+    <!-- STAFF IDENTIFICATION -->
+    <main class="staff-card">
+
+        <div class="identification-label">
+            STAFF IDENTIFICATION RECORD
+        </div>
+
+        <div class="qr-frame">
+            <img
+                src="${qrURL}"
+                alt="Staff QR Code"
+            >
+        </div>
+
+        <p class="scan-text">
+            Scan to read the staff identifier
+        </p>
+
+        <h2 class="staff-name">${name}</h2>
+
+        <p class="staff-position">
+            ${position}
+        </p>
+
+        <table class="staff-table">
+            <tr>
+                <td>Staff ID</td>
+                <td>${id}</td>
+            </tr>
+
+            <tr>
+                <td>Full Name</td>
+                <td>${name}</td>
+            </tr>
+
+            <tr>
+                <td>Position</td>
+                <td>${position}</td>
+            </tr>
+
+            <tr>
+                <td>Email Address</td>
+                <td>${email}</td>
+            </tr>
+
+            <tr>
+                <td>Account Status</td>
+                <td>${status}</td>
+            </tr>
+        </table>
+
+    </main>
+
+    <!-- DOCUMENT NOTICE -->
+    <div class="notice">
+        <strong>Important Notice</strong>
+
+        <div>
+            This document contains staff information
+            maintained by Printify and is intended for
+            authorized administrative use. The QR code
+            contains a staff identifier and does not
+            independently establish identity or
+            current account authorization.
+        </div>
+    </div>
+
+    <!-- OFFICIAL FOOTER -->
+    <footer class="footer">
+
+        <div>
+            <strong>PRINTIFY</strong>
+            <p>Printing Services & Management</p>
+            <p>Official Staff Identification Record</p>
+        </div>
+
+        <div class="footer-right">
+            <strong>Date Printed</strong>
+            <p>${escapeHTML(printedDate)}</p>
+            <p>Document: Staff Identification</p>
+        </div>
+
+    </footer>
+
+    <div class="bottom-note">
+        PRINTIFY | INTERNAL ADMINISTRATIVE DOCUMENT
+    </div>
+
+</div>
+</body>
+</html>
+            `);
+
+            printWindow.document.close();
+
+            const images = [
+                ...printWindow.document.images
+            ];
+
+            const waitForImage = image => {
+                if (image.complete) {
+                    return Promise.resolve();
+                }
+
+                return new Promise(resolve => {
+                    image.addEventListener(
+                        "load",
+                        resolve,
+                        { once: true }
+                    );
+
+                    image.addEventListener(
+                        "error",
+                        resolve,
+                        { once: true }
+                    );
+                });
+            };
+
+            Promise.all(
+                images.map(waitForImage)
+            ).then(() => {
+                if (!printWindow.closed) {
+                    printWindow.focus();
+                    printWindow.print();
+                }
+            });
+
+        } catch (error) {
+            printWindow.close();
+            alert(
+                "Printing failed: " + error.message
+            );
+        }
+    }
+
+    // Replace the old QR print action
+    const printButton =
+        document.getElementById("printStaffQrButton") ||
+        document.getElementById("printStaffQRButton");
+
+    if (printButton) {
+        printButton.addEventListener(
+            "click",
+            event => {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                printOfficialStaffQR();
+            },
+            true
+        );
+    }
+});
+</script>
+
+</html>

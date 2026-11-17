@@ -1,0 +1,412 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/auth-guard.js" data-role="Staff"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Orders | Printify Calapan</title>
+
+    <link rel="icon" type="image/png" href="image/printify_logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- Reuse the actual Staff Dashboard design -->
+    <link rel="stylesheet" href="css/staff-dashboard.css">
+    <link rel="stylesheet" href="css/staff-orders.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/staff-orders.js" defer></script>
+</head>
+
+<body class="light-mode">
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-header">
+            <a href="staff-dashboard.html" class="logo">
+                <div class="logo-icon">
+                    <img src="image/printify_logo.png" alt="Printify">
+                </div>
+                <span>Printify</span>
+            </a>
+        </div>
+
+        <div class="sidebar-label">WORKSPACE</div>
+
+        <nav class="sidebar-navigation">
+
+            <a href="staff-dashboard.html" class="nav-link">
+                <img src="image/dashboard_icon.png" class="menu-icon" alt="">
+                <span>Dashboard</span>
+            </a>
+
+            <a href="staff-orders.html" class="nav-link active">
+                <img src="image/order_icon.png" class="menu-icon" alt="">
+                <span>My Orders</span>
+            </a>
+
+            <a href="staff-attendance.html" class="nav-link">
+                <img src="image/attendance_icon.png" class="menu-icon" alt="">
+                <span>Attendance</span>
+            </a>
+
+            <a href="staff-notifications.html" class="nav-link">
+                <img src="image/notification_icon.png" class="menu-icon" alt="">
+                <span>Notifications</span>
+                <span class="notification-nav-dot"></span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-label settings-label">PERSONAL</div>
+
+        <nav class="sidebar-navigation">
+
+            <a href="staff-profile.html" class="nav-link">
+                <img src="image/user_icon.png" class="menu-icon" alt="">
+                <span>My Profile</span>
+            </a>
+
+            <a href="staff-settings.html" class="nav-link">
+                <img src="image/settings_ion.png" class="menu-icon" alt="">
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-account">
+                <div class="account-avatar" id="sidebarAvatar">S</div>
+
+                <div class="account-details">
+                    <strong id="sidebarName">Staff Member</strong>
+                    <span>Staff Account</span>
+                </div>
+
+                <span class="online-indicator"></span>
+            </div>
+
+            <button class="sidebar-logout" id="sidebarLogoutButton" type="button">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Log Out
+            </button>
+
+            <div class="sidebar-footer">
+                <span>PRINTIFY CALAPAN</span>
+                <span>© <span id="sidebarYear"></span></span>
+            </div>
+
+        </div>
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" id="mainContent">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button class="icon-button menu-button" id="menuToggle"
+                        type="button" aria-label="Toggle sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div class="page-heading">
+                    <h1>My Orders</h1>
+                    <p>View and manage your assigned printing orders.</p>
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="current-date" id="currentDate">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Loading date...</span>
+                </div>
+
+                <button class="icon-button theme-toggle" id="themeToggle"
+                        type="button" aria-label="Switch theme" title="Switch theme">
+                    <img src="image/lightmode_icon.png" id="themeIcon"
+                         class="theme-image-icon" alt="Theme">
+                </button>
+
+                <button class="icon-button notification-button"
+                        id="notificationButton" type="button"
+                        title="Notifications">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notification-dot"></span>
+                </button>
+
+                <div class="profile-container">
+
+                    <button class="profile-button" id="profileButton"
+                            type="button" aria-expanded="false">
+
+                        <div class="profile-avatar" id="profileAvatar">S</div>
+
+                        <div class="profile-information">
+                            <strong id="profileName">Staff Member</strong>
+                            <span>Staff Account</span>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-down profile-arrow"></i>
+                    </button>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+
+                        <div class="dropdown-profile">
+                            <div class="profile-avatar" id="dropdownAvatar">S</div>
+                            <div>
+                                <strong id="dropdownName">Staff Member</strong>
+                                <span id="dropdownEmail">staff@printify.com</span>
+                            </div>
+                        </div>
+
+                        <a href="staff-profile.html">
+                            <img src="image/user_icon.png" class="dropdown-icon" alt="">
+                            My Profile
+                        </a>
+
+                        <a href="staff-settings.html">
+                            <img src="image/settings_ion.png" class="dropdown-icon" alt="">
+                            Account Settings
+                        </a>
+
+                        <button type="button" id="logoutButton">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Log Out
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+        <!-- MY ORDERS CONTENT -->
+        <section class="dashboard-content orders-content">
+            <nav class="staff-orders-breadcrumb" aria-label="Breadcrumb">
+                <a href="staff-dashboard.html">Staff Workspace</a>
+                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                <span aria-current="page">My Orders</span>
+            </nav>
+
+            <!-- ORDERS SECTION -->
+            <div class="section-heading orders-section-heading">
+
+                <div>
+                    <h2>My Assigned Orders</h2>
+                    <p>Search, view, and update your assigned printing orders.</p>
+                </div>
+
+                <button class="text-link orders-refresh-button" id="refreshOrders" type="button">
+                    <i class="fa-solid fa-rotate"></i>
+                    Refresh Orders
+                </button>
+
+            </div>
+
+
+            <!-- ORDERS PANEL -->
+            <section class="panel orders-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h2>Order Records</h2>
+                        <p>All printing orders assigned to your account.</p>
+                    </div>
+
+                    <div class="orders-panel-status">
+                        <span class="status-indicator"></span>
+                        Live Overview
+                    </div>
+                </div>
+
+
+                <div class="table-toolbar orders-toolbar">
+
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="orderSearch"
+                               placeholder="Search order ID or customer...">
+                    </div>
+
+                    <div class="orders-filters">
+
+                        <select id="orderStatusFilter">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="completed">Completed</option>
+                        </select>
+
+                        <select id="orderSort">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-container orders-table-container">
+
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>ORDER ID</th>
+                                <th>CUSTOMER</th>
+                                <th>ORDER DETAILS</th>
+                                <th>DATE</th>
+                                <th>STATUS</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="myOrdersBody">
+                            <tr>
+                                <td colspan="6" class="empty-table">
+                                    <i class="fa-solid fa-inbox"></i>
+                                    <strong>No orders available</strong>
+                                    <span>Your assigned orders will appear here.</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+                <div class="table-footer orders-table-footer">
+                    <span id="orderCount">Showing 0 orders</span>
+
+                    <button type="button" id="clearOrderFilters">
+                        <i class="fa-solid fa-filter-circle-xmark"></i>
+                        Clear Filters
+                    </button>
+                </div>
+
+            </section>
+
+
+            <!-- FOOTER -->
+            <footer class="dashboard-footer">
+                <span>
+                    © <span id="currentYear"></span>
+                    <strong>Printify Calapan</strong> • DJJ Computer Shop
+                </span>
+
+                <span class="footer-status">
+                    <i class="fa-solid fa-circle"></i>
+                    Staff Workspace
+                </span>
+            </footer>
+
+        </section>
+    </main>
+
+
+    <!-- ORDER DETAILS MODAL -->
+    <div class="order-modal-overlay" id="orderModal">
+
+        <div class="order-modal">
+
+            <div class="order-modal-header">
+                <div>
+                    <span>ORDER INFORMATION</span>
+                    <h2>Order Details</h2>
+                </div>
+
+                <button type="button" id="closeOrderModal" class="order-modal-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="order-modal-body">
+
+                <div class="order-modal-reference">
+                    <span>Order ID</span>
+                    <strong id="modalOrderId">—</strong>
+                </div>
+
+                <div class="order-detail-grid">
+
+                    <div>
+                        <span>Customer</span>
+                        <strong id="modalCustomer">—</strong>
+                    </div>
+
+                    <div>
+                        <span>Contact Number</span>
+                        <strong id="modalContact">—</strong>
+                    </div>
+
+                    <div>
+                        <span>Product / Service</span>
+                        <strong id="modalProduct">—</strong>
+                    </div>
+
+                    <div>
+                        <span>Quantity</span>
+                        <strong id="modalQuantity">—</strong>
+                    </div>
+
+                    <div>
+                        <span>Order Date</span>
+                        <strong id="modalDate">—</strong>
+                    </div>
+
+                    <div>
+                        <span>Payment Status</span>
+                        <strong id="modalPayment">—</strong>
+                    </div>
+
+                </div>
+
+                <div class="order-notes">
+                    <span>Order Notes</span>
+                    <p id="modalNotes">No additional notes.</p>
+                </div>
+
+                <div class="order-status-update">
+                    <label for="modalStatus">Update Order Status</label>
+
+                    <select id="modalStatus">
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="order-modal-footer">
+                <button type="button" class="modal-cancel-button" id="cancelOrderModal">
+                    Cancel
+                </button>
+
+                <button type="button" class="modal-save-button" id="saveOrderStatus">
+                    <i class="fa-solid fa-check"></i>
+                    Save Changes
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
